@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="calculator.css"
+    <title>Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator">
+            <div class="screen">
+                <textarea id="screen" disabled></textarea>
+        </div>
+        <table>
+            <tbody>
+                <tr>
+                    <td onclick="OperationClicked('c')">c</td>
+                    <td onclick="OperationClicked('()')">()</td>
+                    <td onclick="OperationClicked('%')">%</td>
+                    <td onclick="OperationClicked('/')">/</td>
+                </tr>
+                <tr>
+                    <td onclick="NumberClicked('7')">7</td>
+                    <td onclick="NumberClicked('8')">8</td>
+                    <td onclick="NumberClicked('9')">9</td>
+                    <td onclick="OperationClicked('x')">x</td>
+                </tr>
+                <tr>
+                    <td onclick="NumberClicked('4')">4</td>
+                    <td onclick="NumberClicked('5')">5</td>
+                    <td onclick="NumberClicked('6')">6</td>
+                    <td onclick="OperationClicked('-')">-</td>
+                </tr>
+                <tr>
+                    <td onclick="NumberClicked('1')">1</td>
+                    <td onclick="NumberClicked('2')">2</td>
+                    <td onclick="NumberClicked('3')">3</td>
+                    <td onclick="OperationClicked('+')">+</td>
+                </tr>
+                <tr>
+                    <td onclick="OperationClicked('+/-')">+/-</td>
+                    <td onclick="NumberClicked('0')">0</td>
+                    <td onclick="NumberClicked('.')">.</td>
+                    <td onclick="Calculate()">=</td>
+                </tr>
+            </tbody>
+        </table>
+    <script>
+        let firstNumber = '';
+            let secondNumber = '';
+            let operation = '';
+            function NumberClicked(number) {
+                if(operation === '') {
+                    firstNumber += number;
+                }
+                else {
+                    secondNumber += number;
+                }
+                PrintOnScreen(number);
+            }
+            function PrintOnScreen(value) {
+                //document.getElementById('screen').disabled = false;
+                if(Number(value))
+                    document.getElementById('screen').value += (value);
+                else
+                    document.getElementById('screen').value += (' ' + value + ' ');
+                //document.getElementById('screen').disabled = true;
+            }
+            function OperationClicked(op) {
+                //if(firstNumber !== '' && secondNumber !== '')
+                if(firstNumber !== '') {
+                    switch(op) {
+                        case 'c':
+                            document.getElementById('screen').value = '';
+                            firstNumber = '';
+                            secondNumber = '';
+                            operation = '';
+                            break;
+                        case '+/-':
+                            if(operation === ''){
+                                const newFirstNumber = Number(firstNumber) * -1;
+                                document.getElementById('screen').value = document.getElementById('screen').value.replace(firstNumber, newFirstNumber);
+                                firstNumber = newFirstNumber;
+                            }
+                            break;
+                        default:
+                            if(operation === '' || op === '-'){
+                                PrintOnScreen(op);
+                                operation = op;
+                            }
+                            else{
+                                if(secondNumber !== '')
+                                    firstNumber = Calculate();
+                            }
+                            break;
+                    }
+                }
+                document.getElementById('screen').disabled = false;
+                document.getElementById('screen').disabled = true;
+            }
+            function Calculate() {
+                let result = 0;
+                switch(operation) {
+                    case '+':
+                        result = parseFloat(firstNumber) + Number(secondNumber);
+                        break;
+                    case '/':
+                        if(secondNumber === 0)
+                            return;
+                        result = Number(firstNumber) / Number(secondNumber);
+                        break;
+                    case '-':
+                        result = Number(firstNumber) - Number(secondNumber);
+                        break;
+                    case 'x':
+                        result = Number(firstNumber) * Number(secondNumber);
+                        break;
+                    default:
+                        return;
+                }
+                document.getElementById('screen').value = result;
+                operation = '';
+                firstNumber = result;
+                secondNumber = '';
+                return result;
+            }
+    </script>
+</body>
+</html>
